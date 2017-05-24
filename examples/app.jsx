@@ -154,13 +154,51 @@ class ExampleBubbleChart extends React.Component {
         }
     }
 
-    render () {
+    render() {
         return (
             <div>
                 <h2>Bubble Chart</h2>
                 <Chart
                     type={"bubble"}
                     diameter={500}
+                    showTooltips={true}
+                    data={this.state.data}
+                />
+            </div>
+        );
+    }
+}
+
+class ExampleLineChart extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            data: [
+                { x: '1-Jan-16', y: 323 },
+                { x: '2-Jan-16', y: 222 },
+                { x: '3-Jan-16', y: 345 },
+                { x: '4-Jan-16', y: 755 },
+                { x: '5-Jan-16', y: 842 },
+                { x: '6-Jan-16', y: 455 },
+                { x: '7-Jan-16', y: 503 },
+                { x: '8-Jan-16', y: 333 },
+                { x: '9-Jan-16', y: 201 },
+                { x: '10-Jan-16', y: 434 }
+            ]
+        };
+    }
+
+    render() {
+        return (
+            <div>
+                <h2>Line Chart</h2>
+                <Chart
+                    type={"line"}
+                    width={960}
+                    height={500}
+                    margin={{ top: 20, right: 20, bottom: 30, left: 50 }}
                     showTooltips={true}
                     data={this.state.data}
                 />
@@ -201,7 +239,7 @@ class SomeCustomChart {
             .attr("width", width)
             .attr("height", height)
             .append("g")
-                .attr("transform", `translate(${halfWidth}, ${halfHeight})`);
+            .attr("transform", `translate(${halfWidth}, ${halfHeight})`);
 
         const path = svg.selectAll("path")
             .data(pie(d3.entries(data)))
@@ -261,6 +299,7 @@ class App extends React.Component {
                 <ExamplePieChart />
                 <ExampleDonutChart />
                 <ExampleBubbleChart />
+                <ExampleLineChart />
                 <ExampleCustomChart />
             </div>
         );
