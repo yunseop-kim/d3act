@@ -1,21 +1,20 @@
 import * as d3 from "d3";
 import BaseChart from './BaseChart';
-// import {line} from 'd3-shape';
 
 export default class LineChart extends BaseChart {
-    getScaleX() { // *
+    getScaleX() {
         return d3.scaleTime().range([0, this.props.width]);
     }
 
-    getScaleY() { // *
+    getScaleY() {
         return d3.scaleLinear().range([this.props.height, 0]);
     }
 
-    createAxisX(x) { // *
+    createAxisX(x) {
         return d3.axisBottom(x);
     }
 
-    createAxisY(y) { // *
+    createAxisY(y) {
         return d3.axisLeft(y);
     }
 
@@ -33,8 +32,8 @@ export default class LineChart extends BaseChart {
         const x = this.getScaleX();
         const y = this.getScaleY();
         
-        this.xAxis = this.createAxisX(x);//
-        this.yAxis = this.createAxisY(y);//
+        this.xAxis = this.createAxisX(x);
+        this.yAxis = this.createAxisY(y);
         
         const valueline = d3.line()
             .x(function(d) { return x(d.x); })
@@ -50,17 +49,14 @@ export default class LineChart extends BaseChart {
             .append("g")
                 .attr("transform", `translate(${this.props.margin.left}, ${this.props.margin.top})`);
 
-        // format the data
         data.forEach(function(d) {
             d.x = parseTime(d.x);
             d.y = +d.y;
         });
 
-        // Scale the range of the data
         x.domain(d3.extent(data, function(d) { return d.x; }));
         y.domain([0, d3.max(data, function(d) { return d.y; })]);
         
-        // Add the valueline path.
         this.svg.append("path")
             .attr("class", "line")
             .attr("d", valueline(data))
@@ -68,13 +64,11 @@ export default class LineChart extends BaseChart {
             .style("stroke","steelblue")
             .style("stoke-width","3px");
 
-        // Add the X Axis
         this.svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + this.height + ")")
             .call(d3.axisBottom(x));
 
-        // Add the Y Axis
         this.svg.append("g")
             .attr("class", "y axis")
             .call(d3.axisLeft(y));
@@ -110,24 +104,18 @@ export default class LineChart extends BaseChart {
             .y(function(d) { return y(d.y); });
 
         const parseTime = this.parsingTime();
-        // format the data
         data.forEach(function(d) {
             d.x = parseTime(d.x);
             d.y = +d.y;
         });
-
-        console.log("data:", data);
         
-        // Recalculate domain given new data
         x.domain(d3.extent(data, function(d) { return d.x; }));
         y.domain([0, d3.max(data, function(d) { return d.y; })]);
 
-        // Let's update the lines
         this.svg.selectAll(".line")
                 .transition().duration(500)
                 .attr("d",  valueline(data));
 
-        // Let's update the dots
         this.svg.selectAll(".dot")
             .data(data)
             .transition().duration(500)
@@ -137,13 +125,11 @@ export default class LineChart extends BaseChart {
                 .style("fill", "white")
                 .style("stroke", "black");
         
-        // Remove Old dots
         this.svg.selectAll(".dot")
             .data(data)
         .exit()
         .remove()
 
-        // Let's update the x & y axis
         this.svg.selectAll("g.x.axis")
         .transition().duration(500).call(this.xAxis);
         this.svg.selectAll("g.y.axis")
